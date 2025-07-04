@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <!-- Header -->
+  <header class="bg-white p-4 shadow flex justify-between items-center">
+    <h1 class="text-xl font-bold">Admin Dashboard</h1>
+    <a href="index.html" class="text-blue-600 hover:underline">Logout</a>
+  </header>
+
+  <!-- Suggestions List -->
+  <main class="p-6">
+    <h2 class="text-2xl font-semibold mb-4">Submitted Suggestions</h2>
+    <div id="suggestions" class="grid gap-4">
+      <!-- Sample Cards -->
+      <div class="bg-white p-4 rounded shadow">
+        <p>"Need more seating in library."</p>
+        <div class="text-sm text-gray-500">Category: Facilities • Status: Pending</div>
+      </div>
+      <div class="bg-white p-4 rounded shadow">
+        <p>"Add more elective options in 3rd year."</p>
+        <div class="text-sm text-gray-500">Category: Academics • Status: In Progress</div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <title>MyVNR Voice Portal</title>
+  <link rel="icon" href="o610rvmps1.jpg" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+
+  <!-- Header -->
+  <header class="bg-white shadow p-4 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <img src="o610rvmps1.jpg" alt="VNR Logo" class="h-10" />
+      <h1 class="text-xl font-bold">MyVNR Voice Portal</h1>
+    </div>
+    <a href="#adminLogin" class="text-blue-600 hover:underline">Admin Login</a>
+  </header>
+
+  <!-- Hero -->
+  <section class="text-center p-8 bg-blue-50">
+    <h2 class="text-3xl font-semibold">Empowering Student Voice</h2>
+    <p class="text-gray-600">Submit anonymous suggestions and track progress</p>
+  </section>
+
+  <!-- Suggestion Form -->
+  <section class="max-w-xl mx-auto p-6 bg-white shadow rounded my-8">
+    <h3 class="text-xl font-medium mb-4">Submit a Suggestion</h3>
+    <form id="suggestionForm">
+      <textarea placeholder="Your suggestion..." required class="w-full border rounded p-2 mb-3"></textarea>
+      <select required class="w-full border rounded p-2 mb-4">
+        <option value="">Select Category</option>
+        <option>Academics</option>
+        <option>Infrastructure</option>
+        <option>Facilities</option>
+        <option>Other</option>
+      </select>
+      <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+        Submit Anonymously
+      </button>
+    </form>
+  </section>
+
+  <!-- Admin Login -->
+  <section id="adminLogin" class="max-w-md mx-auto p-6 bg-white shadow rounded my-16">
+    <h3 class="text-xl font-medium mb-4">Admin Login</h3>
+    <form id="adminForm">
+      <input type="email" placeholder="Email" required class="w-full border rounded p-2 mb-3" />
+      <input type="password" placeholder="Password" required class="w-full border rounded p-2 mb-4" />
+      <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
+        Login
+      </button>
+    </form>
+  </section>
+
+  <script>
+    // Suggestion Form Handler
+    document.getElementById("suggestionForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      alert("✅ Suggestion submitted anonymously!");
+      this.reset();
+    });
+
+    // Admin Login Handler
+    document.getElementById("adminForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const email = this.querySelector('input[type="email"]').value;
+      const password = this.querySelector('input[type="password"]').value;
+      if (email === "admin@vnrvjiet.ac.in" && password === "admin123") {
+        window.location.href = "admin.html";
+      } else {
+        alert("❌ Invalid credentials");
+      }
+    });
+  </script>
+</body>
+</html>
