@@ -1,31 +1,15 @@
-// Firebase Setup
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { db } from './firebase-config.js';
 import {
-  getFirestore,
   collection,
   addDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Suggestion Form Submission
 const form = document.getElementById("suggestionForm");
 const statusBox = document.getElementById("submissionStatus");
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-
   statusBox.textContent = "⏳ Status: Submission in progress...";
   statusBox.className = "mt-4 text-sm text-yellow-600";
 
@@ -55,13 +39,11 @@ form.addEventListener("submit", async (e) => {
     statusBox.className = "mt-4 text-sm text-red-600";
   }
 
-  // Optional: Hide status after 5 seconds
   setTimeout(() => {
     statusBox.textContent = "";
   }, 5000);
 });
 
-// Admin Login
 const adminForm = document.getElementById("adminForm");
 
 adminForm?.addEventListener("submit", (e) => {
