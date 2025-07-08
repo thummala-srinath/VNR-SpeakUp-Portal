@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="stylesheet" href="style.css" />
   <meta charset="UTF-8" />
   <title>VNR SpeakUp Portal</title>
-  <link rel="icon" href="o610rvmps1.jpg" />
+  <link rel="icon" href="logo.jpg" />
+  <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 font-sans">
@@ -12,29 +12,32 @@
   <!-- Header -->
   <header class="bg-white shadow p-4 flex justify-between items-center">
     <div class="flex items-center gap-3">
-      <img src="o610rvmps1.jpg" alt="VNR Logo" class="h-10" />
+      <img src="logo.jpg" alt="VNR Logo" class="h-10" />
       <h1 class="text-xl font-bold">VNR SpeakUp Portal</h1>
     </div>
     <a href="#adminLogin" class="text-blue-600 hover:underline">Admin Login</a>
   </header>
 
-  <!-- Hero -->
+  <!-- Hero Section -->
   <section class="text-center p-8 bg-blue-50">
-    <h2 class="text-3xl font-semibold">Empowering Student Voice</h2>
-    <p class="text-gray-600">Submit anonymous suggestions and track progress</p>
-  </section> 
-<section class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4 p-6">
-  <a href="#submit" class="bg-white border shadow p-4 rounded hover:shadow-lg transition">
-    <h3 class="text-lg font-semibold">📨 Submit a Suggestion</h3>
-    <p class="text-gray-600 text-sm">Share your thoughts anonymously and help improve campus life.</p>
-  </a>
-  <a href="#adminLogin" class="bg-white border shadow p-4 rounded hover:shadow-lg transition">
-    <h3 class="text-lg font-semibold">🛡️ Admin Login</h3>
-    <p class="text-gray-600 text-sm">Admins can track and respond to feedback securely.</p>
-  </a>
-</section>
+    <h2 class="text-3xl font-semibold">Speak. Share. Solve.</h2>
+    <p class="text-gray-600">Submit anonymous suggestions and help improve campus life.</p>
+  </section>
+
+  <!-- Feature Buttons -->
+  <section class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4 p-6">
+    <a href="#submit" class="bg-white border shadow p-4 rounded hover:shadow-lg transition">
+      <h3 class="text-lg font-semibold">📨 Submit a Suggestion</h3>
+      <p class="text-gray-600 text-sm">Share your ideas anonymously to help improve VNR campus life.</p>
+    </a>
+    <a href="#adminLogin" class="bg-white border shadow p-4 rounded hover:shadow-lg transition">
+      <h3 class="text-lg font-semibold">🛡️ Admin Login</h3>
+      <p class="text-gray-600 text-sm">Login to review, update, and resolve student feedback.</p>
+    </a>
+  </section>
+
   <!-- Suggestion Form -->
-  <section class="max-w-xl mx-auto p-6 bg-white shadow rounded my-8">
+  <section id="submit" class="max-w-xl mx-auto p-6 bg-white shadow rounded my-8">
     <h3 class="text-xl font-medium mb-4">Submit a Suggestion</h3>
     <form id="suggestionForm">
       <textarea placeholder="Your suggestion..." required class="w-full border rounded p-2 mb-3"></textarea>
@@ -51,7 +54,7 @@
     </form>
   </section>
 
-  <!-- Admin Login -->
+  <!-- Admin Login Form -->
   <section id="adminLogin" class="max-w-md mx-auto p-6 bg-white shadow rounded my-16">
     <h3 class="text-xl font-medium mb-4">Admin Login</h3>
     <form id="adminForm">
@@ -63,31 +66,52 @@
     </form>
   </section>
 
-  <script>
-    // Suggestion Form Handler
-    document.getElementById("suggestionForm").addEventListener("submit", function(e) {
+  <!-- Contact Footer -->
+  <footer class="bg-white border-t mt-12 p-6 text-center text-sm text-gray-600">
+    <p>🔗 For queries or support, contact:</p>
+    <p>Email: <a href="mailto:speakup@vnrvjiet.ac.in" class="text-blue-600 hover:underline">speakup@vnrvjiet.ac.in</a></p>
+    <p>Faculty Mentor: Krishna Prasad Sir – AIML/IoT Department</p>
+    <p>Made with 💙 by VJ StartUps Club Interns</p>
+  </footer>
+
+  <!-- Firebase Submission Logic -->
+  <script type="module">
+    import { db } from './firebase-config.js';
+    import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const form = document.getElementById("suggestionForm");
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      alert("✅ Suggestion submitted anonymously!");
-      this.reset();
+      const text = form.querySelector("textarea").value.trim();
+      const category = form.querySelector("select").value;
+
+      if (!text || !category) return alert("Please fill all fields");
+
+      try {
+        await addDoc(collection(db, "suggestions"), {
+          text,
+          category,
+          status: "Pending",
+          timestamp: serverTimestamp()
+        });
+        alert("✅ Suggestion submitted!");
+        form.reset();
+      } catch (err) {
+        console.error("Error submitting:", err);
+        alert("❌ Submission failed");
+      }
     });
-    <footer class="bg-white border-t mt-12 p-6 text-center text-sm text-gray-600">
-  <p>🔗 For queries or support, contact:</p>
-  <p>Email: <a href="mailto:speakup@vnrvjiet.ac.in" class="text-blue-600 hover:underline">speakup@vnrvjiet.ac.in</a></p>
-  <p>Faculty Mentor: Krishna Prasad Sir – AIML/IoT Department</p>
-  <p>Made with 💙 by VJ StartUps Club Interns</p>
-</footer>
-    // Admin Login Handler
+
     document.getElementById("adminForm").addEventListener("submit", function(e) {
       e.preventDefault();
       const email = this.querySelector('input[type="email"]').value;
       const password = this.querySelector('input[type="password"]').value;
-      if (email === "admin@vnrvjiet.ac.in" && password === "#VNRVJIET2025") {
+      if (email === "admin@vnrvjiet.ac.in" && password === "admin123") {
         window.location.href = "admin.html";
       } else {
         alert("❌ Invalid credentials");
       }
     });
-   
   </script>
 </body>
 </html>
