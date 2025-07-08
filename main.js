@@ -5,6 +5,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+// Suggestion Form Logic
 const form = document.getElementById("suggestionForm");
 const statusBox = document.getElementById("submissionStatus");
 
@@ -44,6 +45,7 @@ form.addEventListener("submit", async (e) => {
   }, 5000);
 });
 
+// Admin Login Logic
 const adminForm = document.getElementById("adminForm");
 
 adminForm?.addEventListener("submit", (e) => {
