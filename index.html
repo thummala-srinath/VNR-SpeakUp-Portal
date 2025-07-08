@@ -12,7 +12,7 @@
   <!-- Header -->
   <header class="bg-white shadow p-4 flex justify-between items-center">
     <div class="flex items-center gap-3">
-      <img src="o610rvmps1.jpg" alt="VNR Logo" class="h-10" />
+      <img src="logo.jpg" alt="VNR Logo" class="h-10" />
       <h1 class="text-xl font-bold">VNR SpeakUp Portal</h1>
     </div>
     <a href="#adminLogin" class="text-blue-600 hover:underline">Admin Login</a>
@@ -52,7 +52,8 @@
         Submit Anonymously
       </button>
     </form>
-  <div id="submissionStatus" class="mt-4 text-sm text-gray-600"></div>
+    <div id="submissionStatus" class="mt-4 text-sm text-gray-600"></div>
+  </section>
 
   <!-- Admin Login Form -->
   <section id="adminLogin" class="max-w-md mx-auto p-6 bg-white shadow rounded my-16">
@@ -71,21 +72,34 @@
     <p>🔗 For queries or support, contact:</p>
     <p>Email: <a href="mailto:speakup@vnrvjiet.ac.in" class="text-blue-600 hover:underline">speakup@vnrvjiet.ac.in</a></p>
     <p>Faculty Mentor: Krishna Prasad Sir – AIML/IoT Department</p>
-    <p>Made with 💙 by VJ StartUps Club Interns</p>
+    <p>Made with 💙 by The Try-Hards VJ StartUps Club Interns</p>
   </footer>
 
-  <!-- Firebase Submission Logic -->
+  <!-- Firebase Submission Script -->
   <script type="module">
     import { db } from './firebase-config.js';
-    import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import {
+      collection,
+      addDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const form = document.getElementById("suggestionForm");
+    const statusBox = document.getElementById("submissionStatus");
+
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      statusBox.textContent = "⏳ Status: Submission in progress...";
+      statusBox.className = "mt-4 text-sm text-yellow-600";
+
       const text = form.querySelector("textarea").value.trim();
       const category = form.querySelector("select").value;
 
-      if (!text || !category) return alert("Please fill all fields");
+      if (!text || !category) {
+        statusBox.textContent = "❌ Status: Please fill all fields";
+        statusBox.className = "mt-4 text-sm text-red-600";
+        return;
+      }
 
       try {
         await addDoc(collection(db, "suggestions"), {
@@ -94,18 +108,28 @@
           status: "Pending",
           timestamp: serverTimestamp()
         });
-        alert("✅ Suggestion submitted!");
+
+        statusBox.textContent = "✅ Status: Suggestion successfully submitted!";
+        statusBox.className = "mt-4 text-sm text-green-600";
         form.reset();
       } catch (err) {
-        console.error("Error submitting:", err);
-        alert("❌ Submission failed");
+        console.error("Submission Error:", err);
+        statusBox.textContent = "❌ Status: Submission failed — please try again.";
+        statusBox.className = "mt-4 text-sm text-red-600";
       }
+
+      setTimeout(() => {
+        statusBox.textContent = "";
+      }, 5000);
     });
 
-    document.getElementById("adminForm").addEventListener("submit", function(e) {
+    const adminForm = document.getElementById("adminForm");
+
+    adminForm?.addEventListener("submit", (e) => {
       e.preventDefault();
-      const email = this.querySelector('input[type="email"]').value;
-      const password = this.querySelector('input[type="password"]').value;
+      const email = adminForm.querySelector('input[type="email"]').value;
+      const password = adminForm.querySelector('input[type="password"]').value;
+
       if (email === "admin@vnrvjiet.ac.in" && password === "admin123") {
         window.location.href = "admin.html";
       } else {
@@ -115,3 +139,4 @@
   </script>
 </body>
 </html>
+
