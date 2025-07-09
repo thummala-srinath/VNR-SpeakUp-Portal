@@ -6,7 +6,7 @@ service cloud.firestore {
       allow create: if request.auth == null;
 
       // Allow only admin to read, update, or delete
-      allow read: if true;
+   allow read, write: if true;
     }
   }
 }
