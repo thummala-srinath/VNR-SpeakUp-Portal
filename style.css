@@ -1,13 +1,40 @@
+/* General Styles */
 body {
   font-family: 'Inter', sans-serif;
   background-color: #f9fafb;
   color: #1f2937;
 }
 
-button, input, select, textarea {
+a {
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #2563eb; /* Tailwind blue-600 */
+}
+
+/* Buttons */
+button {
   transition: all 0.2s ease-in-out;
+  cursor: pointer;
 }
 
 button:hover {
   transform: scale(1.02);
+}
+
+/* Input Fields */
+input, textarea, select {
+  font-size: 0.95rem;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: #3b82f6; /* Tailwind blue-500 */
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+/* Status Box Styling */
+#submissionStatus {
+  transition: all 0.3s ease;
 }
