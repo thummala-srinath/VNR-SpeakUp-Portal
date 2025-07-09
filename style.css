@@ -1,40 +1,23 @@
-/* General Styles */
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: #f9fafb;
-  color: #1f2937;
+.input {
+  @apply px-4 py-2 border border-gray-300 rounded w-full;
 }
 
-a {
-  transition: color 0.2s ease;
+.btn {
+  @apply bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700;
 }
 
-a:hover {
-  color: #2563eb; /* Tailwind blue-600 */
+.status {
+  @apply px-2 py-1 rounded text-white;
 }
 
-/* Buttons */
-button {
-  transition: all 0.2s ease-in-out;
-  cursor: pointer;
+.status.pending {
+  @apply bg-yellow-500;
 }
 
-button:hover {
-  transform: scale(1.02);
+.status.in-progress {
+  @apply bg-blue-500;
 }
 
-/* Input Fields */
-input, textarea, select {
-  font-size: 0.95rem;
-}
-
-input:focus, textarea:focus, select:focus {
-  outline: none;
-  border-color: #3b82f6; /* Tailwind blue-500 */
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
-}
-
-/* Status Box Styling */
-#submissionStatus {
-  transition: all 0.3s ease;
+.status.resolved {
+  @apply bg-green-600;
 }
