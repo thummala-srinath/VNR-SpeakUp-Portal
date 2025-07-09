@@ -2,80 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VNR SpeakUp Portal</title>
-  <link rel="icon" href="logo.jpg" />
-  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="main.js" defer></script>
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 font-sans">
-  <!-- HEADER -->
-  <header class="bg-white shadow p-4 flex justify-between items-center">
-    <div class="flex items-center gap-3">
-      <img src="logo.jpg" alt="VNR Logo" class="h-10" />
-      <h1 class="text-xl font-bold">VNR SpeakUp Portal</h1>
-    </div>
-    <a href="#adminLogin" class="text-blue-600 hover:underline">Admin Login</a>
-  </header>
-
-  <!-- HERO -->
-  <section class="text-center p-8 bg-blue-50">
-    <h2 class="text-3xl font-semibold">Speak. Share. Solve.</h2>
-    <p class="text-gray-600">Submit anonymous suggestions and help improve campus life.</p>
-  </section>
-
-  <!-- FEATURE BUTTONS -->
-  <section class="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4 p-6">
-    <a href="#submit" class="bg-white border shadow p-4 rounded hover:shadow-lg transition">
-      <h3 class="text-lg font-semibold">📨 Submit a Suggestion</h3>
-      <p class="text-gray-600 text-sm">Share your ideas anonymously to help improve VNR campus life.</p>
-    </a>
-    <a href="#adminLogin" class="bg-white border shadow p-4 rounded hover:shadow-lg transition">
-      <h3 class="text-lg font-semibold">🛡️ Admin Login</h3>
-      <p class="text-gray-600 text-sm">Login to review, update, and resolve student feedback.</p>
-    </a>
-  </section>
-
-  <!-- SUGGESTION FORM -->
-  <section id="submit" class="max-w-xl mx-auto p-6 bg-white shadow rounded my-8">
-    <h3 class="text-xl font-medium mb-4">Submit a Suggestion</h3>
-    <form id="suggestionForm">
-      <textarea placeholder="Your suggestion..." required class="w-full border rounded p-2 mb-3"></textarea>
-      <select required class="w-full border rounded p-2 mb-4">
-        <option value="">Select Category</option>
-        <option>Academics</option>
-        <option>Infrastructure</option>
-        <option>Facilities</option>
-        <option>Other</option>
+<body class="bg-gray-100">
+  <div class="max-w-xl mx-auto mt-10 p-6 bg-white shadow rounded">
+    <h1 class="text-2xl font-bold mb-4">Submit a Suggestion</h1>
+    <form id="suggestionForm" class="flex flex-col gap-4">
+      <textarea id="text" class="input" placeholder="Enter your suggestion..." required></textarea>
+      <select id="category" class="input">
+        <option value="Academics">Academics</option>
+        <option value="Infrastructure">Infrastructure</option>
+        <option value="Facilities">Facilities</option>
+        <option value="Other">Other</option>
       </select>
-      <label class="block mb-2 font-medium">Attach Evidence</label>
-      <input type="file" id="fileInput" accept="image/*,video/*,.pdf" capture="environment" class="w-full border rounded p-2 mb-4" />
-      <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-        Submit Anonymously
-      </button>
+      <input type="file" id="file" class="input" accept="image/*,video/*,application/pdf" />
+      <button type="submit" class="btn">Submit</button>
+      <div id="statusMsg" class="text-center text-sm"></div>
     </form>
-    <div id="submissionStatus" class="mt-4 text-sm text-gray-600"></div>
-  </section>
-
-  <!-- ADMIN LOGIN -->
-  <section id="adminLogin" class="max-w-md mx-auto p-6 bg-white shadow rounded my-16">
-    <h3 class="text-xl font-medium mb-4">Admin Login</h3>
-    <form id="adminForm">
-      <input type="email" placeholder="Email" required class="w-full border rounded p-2 mb-3" />
-      <input type="password" placeholder="Password" required class="w-full border rounded p-2 mb-4" />
-      <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
-        Login
-      </button>
-    </form>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="bg-white border-t mt-12 p-6 text-center text-sm text-gray-600">
-    <p>🔗 For queries or support, contact:</p>
-    <p>Email: <a href="mailto:speakup@vnrvjiet.ac.in" class="text-blue-600 hover:underline">speakup@vnrvjiet.ac.in</a></p>
-    <p>Faculty Mentor: Krishna Prasad Sir – AIML/IoT Department</p>
-    <p>Made with 💙 by The Try-Hards VJ StartUps Club Interns</p>
-  </footer>
-
-  <script type="module" src="main.js"></script>
+  </div>
 </body>
 </html>
