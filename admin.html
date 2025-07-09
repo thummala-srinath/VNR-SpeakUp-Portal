@@ -8,19 +8,26 @@
 </head>
 <body class="bg-gray-100 font-sans">
 
-  <!-- Header -->
   <header class="bg-white p-4 shadow flex justify-between items-center">
     <h1 class="text-xl font-bold">Admin Dashboard</h1>
     <a href="index.html" class="text-blue-600 hover:underline">Logout</a>
   </header>
 
-  <!-- Main Content -->
   <main class="p-6">
-    <h2 class="text-2xl font-semibold mb-4">Submitted Suggestions</h2>
-    <div id="suggestions" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+      <div>⏳ Pending: <span id="countPending">0</span></div>
+      <div>🚀 Initiated: <span id="countInitiated">0</span></div>
+      <div>🔄 In Progress: <span id="countProgress">0</span></div>
+      <div>🎯 Success: <span id="countSuccess">0</span></div>
+      <div>✅ Resolved: <span id="countResolved">0</span></div>
+    </div>
+
+    <input type="text" id="searchInput" placeholder="Search suggestions..." class="w-full p-2 border rounded mb-4" />
+
+    <div id="suggestions" class="space-y-4"></div>
 
     <button id="exportCSV" class="mt-6 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
-      📥 Export Suggestions as CSV
+      📥 Export CSV
     </button>
   </main>
 
