@@ -11,70 +11,7 @@ import {
 const container = document.getElementById("suggestions");
 const searchInput = document.getElementById("searchInput");
 
-// Render card for each suggestion
-function renderCard(id, data) {
-  const card = document.createElement("div");
-  card.className = `p-4 rounded shadow ${
-    data.status === "Resolved" ? "bg-green-50" :
-    data.status === "Success" ? "bg-teal-50" :
-    data.status === "Initiated" ? "bg-purple-50" :
-    data.status === "In Progress" ? "bg-blue-50" :
-    "bg-yellow-50"
-  }`;
-
-  card.innerHTML = `
-    <p class="mb-2">${data.text}</p>
-    <div class="text-sm text-gray-600 mb-1">Category: ${data.category}</div>
-    <div class="text-sm font-medium mb-2">Status: 
-      <span class="px-2 py-1 rounded ${
-        data.status === "Resolved" ? "bg-green-100 text-green-700" :
-        data.status === "Success" ? "bg-teal-100 text-teal-700" :
-        data.status === "Initiated" ? "bg-purple-100 text-purple-700" :
-        data.status === "In Progress" ? "bg-blue-100 text-blue-700" :
-        "bg-yellow-100 text-yellow-700"
-      }">${data.status}</span>
-    </div>
-    ${data.fileURL ? previewAttachment(data.fileURL) : ""}
-    <div class="flex flex-wrap gap-2 mt-2">
-      <button onclick="updateStatus('${id}', 'Pending')" class="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600">⏳ Pending</button>
-      <button onclick="updateStatus('${id}', 'Initiated')" class="bg-purple-500 text-white px-3 py-1 rounded text-sm hover:bg-purple-600">🚀 Initiated</button>
-      <button onclick="updateStatus('${id}', 'In Progress')" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">🔄 In Progress</button>
-      <button onclick="updateStatus('${id}', 'Success')" class="bg-teal-500 text-white px-3 py-1 rounded text-sm hover:bg-teal-600">🎯 Success</button>
-      <button onclick="updateStatus('${id}', 'Resolved')" class="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600">✅ Resolved</button>
-    </div>
-  `;
-
-  container.appendChild(card);
-}
-
-// Load suggestions and count statuses
-async function loadSuggestions(keyword = "") {
-  const snapshot = await getDocs(query(collection(db, "suggestions"), orderBy("timestamp", "desc")));
-  container.innerHTML = "";
-
-  let counts = {
-    Pending: 0,
-    Initiated: 0,
-    "In Progress": 0,
-    Success: 0,
-    Resolved: 0
-  };
-
-  snapshot.forEach(docSnap => {
-    const data = docSnap.data();
-    if (keyword && !data.text.toLowerCase().includes(keyword.toLowerCase())) return;
-
-    counts[data.status] = (counts[data.status] || 0) + 1;
-    renderCard(docSnap.id, data);
-  });
-
-  Object.keys(counts).forEach(status => {
-    const el = document.getElementById(`count${status.replace(/\s/g, "")}`);
-    if (el) el.textContent = counts[status];
-  });
-}
-
-// Evidence preview
+// Preview evidence based on file type
 function previewAttachment(url) {
   if (url.match(/\.(jpg|jpeg|png)$/)) {
     return `<img src="${url}" alt="Evidence" class="mt-2 max-h-40 rounded shadow" />`;
@@ -85,19 +22,117 @@ function previewAttachment(url) {
   }
 }
 
-// Status update
+// Render a suggestion card
+function renderCard(id, data) {
+  const card = document.createElement("div");
+  const colorClass = {
+    "Pending": "bg-yellow-50",
+    "Initiated": "bg-purple-50",
+    "In Progress": "bg-blue-50",
+    "Success": "bg-teal-50",
+    "Resolved": "bg-green-50"
+  }[data.status] || "bg-yellow-50";
+
+  const badgeClass = {
+    "Pending": "bg-yellow-100 text-yellow-700",
+    "Initiated": "bg-purple-100 text-purple-700",
+    "In Progress": "bg-blue-100 text-blue-700",
+    "Success": "bg-teal-100 text-teal-700",
+    "Resolved": "bg-green-100 text-green-700"
+  }[data.status] || "bg-yellow-100 text-yellow-700";
+
+  card.className = `p-4 rounded shadow ${colorClass}`;
+
+  card.innerHTML = `
+    <p class="mb-2">${data.text}</p>
+    <div class="text-sm text-gray-600 mb-1">Category: ${data.category}</div>
+    <div class="text-sm font-medium mb-2">Status: 
+      <span class="px-2 py-1 rounded ${badgeClass}">${data.status}</span>
+    </div>
+    ${data.fileURL ? previewAttachment(data.fileURL) : ""}
+    <div class="flex flex-wrap gap-2 mt-2">
+      ${["Pending", "Initiated", "In Progress", "Success", "Resolved"].map(status =>
+        `<button onclick="updateStatus('${id}', '${status}')" class="${getStatusButtonClass(status)}">${getStatusLabel(status)}</button>`
+      ).join("")}
+    </div>
+  `;
+
+  container.appendChild(card);
+}
+
+// Status button styling
+function getStatusButtonClass(status) {
+  const colorMap = {
+    "Pending": "bg-yellow-500 hover:bg-yellow-600",
+    "Initiated": "bg-purple-500 hover:bg-purple-600",
+    "In Progress": "bg-blue-500 hover:bg-blue-600",
+    "Success": "bg-teal-500 hover:bg-teal-600",
+    "Resolved": "bg-green-500 hover:bg-green-600"
+  };
+  return `${colorMap[status]} text-white px-3 py-1 rounded text-sm`;
+}
+
+// Status button icon+label
+function getStatusLabel(status) {
+  const iconMap = {
+    "Pending": "⏳ Pending",
+    "Initiated": "🚀 Initiated",
+    "In Progress": "🔄 In Progress",
+    "Success": "🎯 Success",
+    "Resolved": "✅ Resolved"
+  };
+  return iconMap[status];
+}
+
+// Load suggestions and count statuses
+async function loadSuggestions(keyword = "") {
+  try {
+    const snapshot = await getDocs(query(collection(db, "suggestions"), orderBy("timestamp", "desc")));
+    container.innerHTML = "";
+    console.log("🔎 Loaded", snapshot.size, "suggestions");
+
+    const counts = {
+      Pending: 0,
+      Initiated: 0,
+      "In Progress": 0,
+      Success: 0,
+      Resolved: 0
+    };
+
+    snapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      const id = docSnap.id;
+
+      if (keyword && !data.text?.toLowerCase().includes(keyword.toLowerCase())) return;
+
+      counts[data.status] = (counts[data.status] || 0) + 1;
+      renderCard(id, data);
+    });
+
+    Object.entries(counts).forEach(([status, count]) => {
+      const el = document.getElementById(`count${status.replace(/\s/g, "")}`);
+      if (el) el.textContent = count;
+    });
+  } catch (err) {
+    console.error("❌ Error loading suggestions:", err);
+    container.innerHTML = "<p class='text-red-600'>🚨 Failed to load data</p>";
+  }
+}
+
+// Update status handler
 window.updateStatus = async (id, status) => {
   try {
-    await updateDoc(doc(db, "suggestions", id), { status });
+    const ref = doc(db, "suggestions", id);
+    await updateDoc(ref, { status });
     alert(`✅ Status updated to "${status}"`);
     loadSuggestions(searchInput.value);
   } catch (err) {
-    console.error(err);
-    alert("❌ Failed to update status");
+    console.error("❌ Failed to update status:", err);
+    alert("🚨 Could not update status");
   }
 };
 
-// CSV export
+// Export to CSV
 document.getElementById("exportCSV").addEventListener("click", async () => {
   const snapshot = await getDocs(collection(db, "suggestions"));
   let csv = "Text,Category,Status\n";
@@ -113,10 +148,10 @@ document.getElementById("exportCSV").addEventListener("click", async () => {
   link.click();
 });
 
-// Search input
+// Search as you type
 searchInput.addEventListener("input", (e) => {
   loadSuggestions(e.target.value);
 });
 
-// Initial load
+// First load
 loadSuggestions();
