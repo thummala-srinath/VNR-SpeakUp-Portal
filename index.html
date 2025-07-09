@@ -18,15 +18,14 @@
     <a href="#adminLogin" class="text-blue-600 hover:underline">Admin Login</a>
   </header>
 
-  <!-- Hero Section -->
+  <!-- Hero -->
   <section class="text-center p-8 bg-blue-50">
     <h2 class="text-3xl font-semibold">Speak. Share. Solve.</h2>
-    <p class="text-gray-600">Submit anonymous suggestions and help improve campus life.</p>
+    <p class="text-gray-600">Submit anonymous suggestions to improve campus life.</p>
   </section>
 
-  <!-- Form Section -->
+  <!-- Suggestion Form -->
   <section id="submit" class="max-w-xl mx-auto p-6 bg-white shadow rounded my-8">
-    <h3 class="text-xl font-medium mb-4">Submit a Suggestion</h3>
     <form id="suggestionForm">
       <textarea placeholder="Your suggestion..." required class="w-full border rounded p-2 mb-3"></textarea>
       <select required class="w-full border rounded p-2 mb-3">
@@ -36,7 +35,7 @@
         <option>Facilities</option>
         <option>Other</option>
       </select>
-      <input type="file" id="fileInput" accept="image/*,video/*,.pdf" capture="environment" class="w-full border rounded p-2 mb-3" />
+      <input type="file" id="fileInput" accept="image/*,.pdf" class="w-full border rounded p-2 mb-3" />
       <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
         Submit Anonymously
       </button>
@@ -46,7 +45,6 @@
 
   <!-- Admin Login -->
   <section id="adminLogin" class="max-w-md mx-auto p-6 bg-white shadow rounded my-12">
-    <h3 class="text-xl font-medium mb-4">Admin Login</h3>
     <form id="adminForm">
       <input type="email" placeholder="Email" required class="w-full border rounded p-2 mb-3" />
       <input type="password" placeholder="Password" required class="w-full border rounded p-2 mb-4" />
@@ -56,11 +54,8 @@
     </form>
   </section>
 
-  <!-- Footer -->
   <footer class="bg-white border-t mt-12 p-6 text-center text-sm text-gray-600">
-    <p>Email: <a href="mailto:speakup@vnrvjiet.ac.in" class="text-blue-600 hover:underline">speakup@vnrvjiet.ac.in</a></p>
-    <p>Faculty Mentor: Krishna Prasad Sir – AIML/IoT Department</p>
-    <p>Made with 💙 by The Try-Hards VJ StartUps Club Interns</p>
+    <p>Made with 💙 by The Try-Hards  VJ StartUps Club Interns</p>
   </footer>
 
   <script type="module" src="main.js"></script>
