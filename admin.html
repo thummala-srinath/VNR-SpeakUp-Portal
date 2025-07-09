@@ -2,84 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Admin Dashboard – VNR SpeakUp</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard</title>
+  <script type="module" src="admin.js" defer></script>
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 font-sans">
-
-  <!-- Header -->
-  <header class="bg-white p-4 shadow flex justify-between items-center">
-    <h1 class="text-xl font-bold">Admin Dashboard</h1>
-    <a href="index.html" class="text-blue-600 hover:underline">Logout</a>
-  </header>
-
-  <!-- Main Content -->
-  <main class="p-6">
-    <h2 class="text-2xl font-semibold mb-4">Submitted Suggestions</h2>
-    <div id="suggestions" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-  </main>
-
-  <!-- Firebase Admin Logic -->
-  <script type="module">
-    import { db } from './firebase-config.js';
-    import {
-      collection,
-      getDocs,
-      query,
-      orderBy,
-      updateDoc,
-      doc
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-    const container = document.getElementById("suggestions");
-
-    async function loadSuggestions() {
-      const q = query(collection(db, "suggestions"), orderBy("timestamp", "desc"));
-      const snapshot = await getDocs(q);
-      container.innerHTML = "";
-
-      snapshot.forEach(docSnap => {
-        const data = docSnap.data();
-        const id = docSnap.id;
-
-        const card = document.createElement("div");
-        card.className = "bg-white p-4 rounded shadow";
-
-        card.innerHTML = `
-          <p class="mb-2">${data.text}</p>
-          <div class="text-sm text-gray-500 mb-2">Category: ${data.category}</div>
-          <div class="text-sm font-medium mb-2">Status: 
-            <span class="inline-block px-2 py-1 rounded ${
-              data.status === 'Resolved' ? 'bg-green-100 text-green-700' :
-              data.status === 'In Progress' ? 'bg-blue-100 text-blue-700' :
-              'bg-yellow-100 text-yellow-700'
-            }">${data.status}</span>
-          </div>
-          <div class="flex gap-2 mt-2">
-            <button onclick="updateStatus('${id}', 'Pending')" class="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600">⏳ Pending</button>
-            <button onclick="updateStatus('${id}', 'In Progress')" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">🔄 In Progress</button>
-            <button onclick="updateStatus('${id}', 'Resolved')" class="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600">✅ Resolved</button>
-          </div>
-        `;
-
-        container.appendChild(card);
-      });
-    }
-
-    window.updateStatus = async (id, status) => {
-      try {
-        const ref = doc(db, "suggestions", id);
-        await updateDoc(ref, { status });
-        alert(`✅ Status updated to "${status}"`);
-        loadSuggestions();
-      } catch (err) {
-        console.error("Update failed:", err);
-        alert("❌ Failed to update status");
-      }
-    };
-
-    loadSuggestions();
-  </script>
+<body class="bg-gray-100">
+  <div class="max-w-3xl mx-auto mt-10 p-6 bg-white shadow rounded">
+    <form id="login-form" class="flex flex-col gap-4">
+      <input type="email" name="email" placeholder="Email" class="input" required />
+      <input type="password" name="password" placeholder="Password" class="input" required />
+      <button type="submit" class="btn">Login</button>
+    </form>
+    <div id="dashboard" class="hidden">
+      <h2 class="text-xl font-semibold mb-4">Submitted Suggestions</h2>
+      <button id="exportCSV" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 mb-4">📄 Export as CSV</button>
+      <div id="suggestions"></div>
+    </div>
+  </div>
 </body>
 </html>
