@@ -20,7 +20,7 @@ form.addEventListener("submit", async (e) => {
   const file = document.getElementById("fileInput").files[0];
 
   if (!text || !category) {
-    statusBox.textContent = "❌ Fill all fields";
+    statusBox.textContent = "❌ Please fill in all required fields";
     statusBox.className = "text-red-600";
     return;
   }
@@ -28,41 +28,46 @@ form.addEventListener("submit", async (e) => {
   let fileURL = null;
 
   try {
-    // Upload file if provided
+    // Upload evidence file if selected
     if (file) {
-      const fileRef = ref(storage, `evidence/${Date.now()}_${file.name}`);
+      const filePath = `evidence/${Date.now()}_${file.name}`;
+      const fileRef = ref(storage, filePath);
       await uploadBytes(fileRef, file);
       fileURL = await getDownloadURL(fileRef);
       console.log("📁 File uploaded successfully:", fileURL);
     }
 
-    // Submit to Firestore
+    // Submit suggestion to Firestore
     const docRef = await addDoc(collection(db, "suggestions"), {
-      text, category, status: "Pending", fileURL, timestamp: serverTimestamp()
+      text,
+      category,
+      status: "Pending",
+      fileURL,
+      timestamp: serverTimestamp()
     });
 
-    console.log("🗃️ Suggestion saved with ID:", docRef.id);
+    console.log("🗃️ Suggestion saved to Firestore with ID:", docRef.id);
     statusBox.textContent = "✅ Suggestion submitted!";
     statusBox.className = "text-green-600";
     form.reset();
-  } catch (err) {
-    console.error("❌ Submission Error:", err);
-    statusBox.textContent = "🚨 Submission failed. Check console for details.";
+  } catch (error) {
+    console.error("❌ Error during submission:", error);
+    statusBox.textContent = "🚨 Submission failed. See console for details.";
     statusBox.className = "text-red-600";
   }
 
-  setTimeout(() => (statusBox.textContent = ""), 5000);
+  setTimeout(() => (statusBox.textContent = ""), 6000);
 });
 
-// Admin login redirect
+// Basic frontend admin login redirect
 const adminForm = document.getElementById("adminForm");
 adminForm?.addEventListener("submit", (e) => {
   e.preventDefault();
-  const email = adminForm.querySelector('input[type="email"]').value;
-  const password = adminForm.querySelector('input[type="password"]').value;
+  const email = adminForm.querySelector('input[type="email"]').value.trim();
+  const password = adminForm.querySelector('input[type="password"]').value.trim();
 
   if (email === "admin@vnrvjiet.ac.in" && password === "#VNRVJIET@2k25") {
-    console.log("🔐 Admin authenticated.");
+    console.log("🔐 Admin access granted");
     window.location.href = "admin.html";
   } else {
     alert("❌ Invalid credentials");
