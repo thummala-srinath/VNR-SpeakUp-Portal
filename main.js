@@ -1,39 +1,46 @@
-import { db, storage } from './firebase-config.js';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import {
-  collection, addDoc, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  getFirestore, collection, addDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import {
-  ref, uploadBytes, getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+  getStorage, ref, uploadBytes, getDownloadURL
+} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
+import { firebaseConfig } from "./firebase-config.js";
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
 const form = document.getElementById("suggestionForm");
-const statusBox = document.getElementById("submissionStatus");
+const statusMsg = document.getElementById("statusMsg");
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  statusBox.textContent = "⏳ Uploading...";
-  statusBox.className = "text-yellow-600";
+  const text = document.getElementById("text").value.trim();
+  const category = document.getElementById("category").value;
+  const fileInput = document.getElementById("file");
+  const file = fileInput.files[0];
 
-  const text = form.querySelector("textarea").value.trim();
-  const category = form.querySelector("select").value;
-  const file = document.getElementById("fileInput").files[0];
-  if (!text || !category) return statusBox.textContent = "❌ Fill all fields";
+  statusMsg.textContent = "Submitting...";
+  statusMsg.className = "text-yellow-500 text-center";
 
-  let fileURL = null;
+  let fileURL = "";
   if (file) {
-    const fileRef = ref(storage, `evidence/${Date.now()}_${file.name}`);
-    await uploadBytes(fileRef, file);
-    fileURL = await getDownloadURL(fileRef);
+    const storageRef = ref(storage, `evidence/${Date.now()}-${file.name}`);
+    await uploadBytes(storageRef, file);
+    fileURL = await getDownloadURL(storageRef);
   }
 
   await addDoc(collection(db, "suggestions"), {
-    text, category, status: "Pending", fileURL,
-    timestamp: serverTimestamp()
+    text,
+    category,
+    status: "Pending",
+    timestamp: serverTimestamp(),
+    fileURL
   });
 
-  statusBox.textContent = "✅ Submitted successfully!";
-  statusBox.className = "text-green-600";
+  statusMsg.textContent = "✅ Suggestion submitted successfully!";
+  statusMsg.className = "text-green-600 text-center";
   form.reset();
-  setTimeout(() => (statusBox.textContent = ""), 5000);
 });
