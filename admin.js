@@ -10,11 +10,16 @@ import {
 
 const container = document.getElementById("suggestions");
 
-// Load all suggestions from Firestore
+// Fetch and display suggestions
 async function loadSuggestions() {
   const q = query(collection(db, "suggestions"), orderBy("timestamp", "desc"));
   const snapshot = await getDocs(q);
   container.innerHTML = "";
+
+  if (snapshot.empty) {
+    container.innerHTML = "<p class='text-gray-500'>No suggestions found.</p>";
+    return;
+  }
 
   snapshot.forEach(docSnap => {
     const data = docSnap.data();
@@ -30,21 +35,26 @@ async function loadSuggestions() {
         <span class="px-2 py-1 rounded ${
           data.status === "Resolved" ? "bg-green-100 text-green-700" :
           data.status === "In Progress" ? "bg-blue-100 text-blue-700" :
+          data.status === "Initiated" ? "bg-purple-100 text-purple-700" :
+          data.status === "Success" ? "bg-teal-100 text-teal-700" :
           "bg-yellow-100 text-yellow-700"
         }">${data.status}</span>
       </div>
       ${data.fileURL ? `<a href="${data.fileURL}" target="_blank" class="text-blue-600 underline text-sm mb-2 inline-block">📎 View Evidence</a>` : ""}
-      <div class="flex gap-2 mt-2">
+      <div class="flex flex-wrap gap-2 mt-2">
         <button onclick="updateStatus('${id}', 'Pending')" class="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600">⏳ Pending</button>
         <button onclick="updateStatus('${id}', 'In Progress')" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">🔄 In Progress</button>
+        <button onclick="updateStatus('${id}', 'Initiated')" class="bg-purple-500 text-white px-3 py-1 rounded text-sm hover:bg-purple-600">🚀 Initiated</button>
+        <button onclick="updateStatus('${id}', 'Success')" class="bg-teal-500 text-white px-3 py-1 rounded text-sm hover:bg-teal-600">🎯 Success</button>
         <button onclick="updateStatus('${id}', 'Resolved')" class="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600">✅ Resolved</button>
       </div>
     `;
+
     container.appendChild(card);
   });
 }
 
-// Update status function
+// Update Firestore status
 window.updateStatus = async (id, status) => {
   try {
     const ref = doc(db, "suggestions", id);
@@ -52,12 +62,12 @@ window.updateStatus = async (id, status) => {
     alert(`✅ Status updated to "${status}"`);
     loadSuggestions();
   } catch (err) {
-    console.error("Update failed:", err);
-    alert("❌ Failed to update status");
+    console.error("Failed to update status:", err);
+    alert("❌ Could not update suggestion status");
   }
 };
 
-// Export CSV
+// Export suggestions to CSV
 document.getElementById("exportCSV").addEventListener("click", async () => {
   const snapshot = await getDocs(collection(db, "suggestions"));
   let csv = "Text,Category,Status\n";
@@ -73,5 +83,5 @@ document.getElementById("exportCSV").addEventListener("click", async () => {
   link.click();
 });
 
-// Load suggestions on page load
+// Initial load
 loadSuggestions();
