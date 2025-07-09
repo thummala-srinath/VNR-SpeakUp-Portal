@@ -2,8 +2,12 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /suggestions/{docId} {
+      // Allow anonymous users to submit suggestions
       allow create: if request.auth == null;
-      allow read, update, delete: if request.auth != null && request.auth.token.email == "admin@vnrvjiet.ac.in";
+
+      // Allow only admin to read, update, or delete
+      allow read, update, delete: if request.auth != null
+        && request.auth.token.email == "admin@vnrvjiet.ac.in";
     }
   }
 }
