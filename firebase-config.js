@@ -6,7 +6,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyCb6Y5K32Cp9Zjke9mrXjJyM4nsg2x48X0",
   authDomain: "vnr-speakup-portal-17d1a.firebaseapp.com",
   projectId: "vnr-speakup-portal-17d1a",
-  storageBucket: "vnr-speakup-portal-17d1a.appspot.com",  // ✅ fixed
+  storageBucket: "vnr-speakup-portal-17d1a.appspot.com",
   messagingSenderId: "5299604231",
   appId: "1:5299604231:web:857b6efb82f6079f2293a2",
   measurementId: "G-62SCFBLKQ7"
