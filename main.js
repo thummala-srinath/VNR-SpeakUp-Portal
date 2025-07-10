@@ -6,65 +6,67 @@ import {
   ref, uploadBytes, getDownloadURL
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
-// Form Elements
-const form = document.getElementById("suggestionForm");
-const statusBox = document.getElementById("submissionStatus");
+// Ensure everything waits for DOM to load
+window.addEventListener('DOMContentLoaded', () => {
+  // Suggestion Form Submission
+  const form = document.getElementById("suggestionForm");
+  const statusBox = document.getElementById("submissionStatus");
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  statusBox.textContent = "⏳ Uploading...";
-  statusBox.className = "text-yellow-600";
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    statusBox.textContent = "⏳ Uploading...";
+    statusBox.className = "text-yellow-600";
 
-  const text = form.querySelector("textarea").value.trim();
-  const category = form.querySelector("select").value;
-  const file = document.getElementById("fileInput").files[0];
+    const text = form.querySelector("textarea").value.trim();
+    const category = form.querySelector("select").value;
+    const file = document.getElementById("fileInput").files[0];
 
-  if (!text || !category) {
-    statusBox.textContent = "❌ Fill all fields";
-    statusBox.className = "text-red-600";
-    return;
-  }
-
-  let fileURL = null;
-
-  try {
-    // Upload file if provided
-    if (file) {
-      const fileRef = ref(storage, `evidence/${Date.now()}_${file.name}`);
-      await uploadBytes(fileRef, file);
-      fileURL = await getDownloadURL(fileRef);
-      console.log("📁 File uploaded successfully:", fileURL);
+    if (!text || !category) {
+      statusBox.textContent = "❌ Fill all fields";
+      statusBox.className = "text-red-600";
+      return;
     }
 
-    // Submit to Firestore
-    const docRef = await addDoc(collection(db, "suggestions"), {
-      text, category, status: "Pending", fileURL, timestamp: serverTimestamp()
-    });
+    let fileURL = null;
 
-    console.log("🗃️ Suggestion saved with ID:", docRef.id);
-    statusBox.textContent = "✅ Suggestion submitted!";
-    statusBox.className = "text-green-600";
-    form.reset();
-  } catch (err) {
-    console.error("❌ Submission Error:", err);
-    statusBox.textContent = "🚨 Submission failed. Check console for details.";
-    statusBox.className = "text-red-600";
-  }
+    try {
+      if (file) {
+        const fileRef = ref(storage, `evidence/${Date.now()}_${file.name}`);
+        await uploadBytes(fileRef, file);
+        fileURL = await getDownloadURL(fileRef);
+      }
 
-  setTimeout(() => (statusBox.textContent = ""), 5000);
-});
+      await addDoc(collection(db, "suggestions"), {
+        text,
+        category,
+        status: "Pending",
+        fileURL,
+        timestamp: serverTimestamp()
+      });
 
-// Admin login redirect
-const adminForm = document.getElementById("adminForm");
-adminForm?.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const email = adminForm.querySelector('input[type="email"]').value;
-  const password = adminForm.querySelector('input[type="password"]').value;
+      statusBox.textContent = "✅ Suggestion submitted!";
+      statusBox.className = "text-green-600";
+      form.reset();
+    } catch (err) {
+      statusBox.textContent = "🚨 Submission failed. Try again.";
+      statusBox.className = "text-red-600";
+    }
 
-  if (email === "admin@vnrvjiet.ac.in" && password === "#VNRVJIET@2k25") {
-    console.log("🔐 Admin authenticated.");
-    window.location.href = "admin.html";
-  } else {
-    alert("❌ Invalid credentials");
-  }
+    setTimeout(() => (statusBox.textContent = ""), 5000);
+  });
+
+  // Admin Login
+  const adminForm = document.getElementById("adminForm");
+
+  adminForm?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = adminForm.querySelector('input[type="email"]').value;
+    const password = adminForm.querySelector('input[type="password"]').value;
+
+    if (email === "admin@vnrvjiet.ac.in" && password === "#VNRVJIET@2k25") {
+      window.location.href = "admin.html";
+    } else {
+      alert("❌ Invalid credentials");
+    }
+  });
 });
