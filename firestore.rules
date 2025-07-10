@@ -2,11 +2,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /suggestions/{docId} {
-      // Allow anonymous users to submit suggestions
-      allow create: if request.auth == null;
-
-      // Allow only admin to read, update, or delete
-   allow read, write: if true;
+      allow read, write: if true; // allow everything temporarily
     }
   }
 }
