@@ -2,7 +2,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /suggestions/{docId} {
-      allow read, write: if true; // allow everything temporarily
+      allow read, write: if true;  // Allow anyone to write temporarily
     }
   }
 }
