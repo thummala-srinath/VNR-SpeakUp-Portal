@@ -1,16 +1,21 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyCb6Y5K32Cp9Zjke9mrXjJyM4nsg2x48X0",
+  authDomain: "vnr-speakup-portal-17d1a.firebaseapp.com",
+  projectId: "vnr-speakup-portal-17d1a",
+  storageBucket: "vnr-speakup-portal-17d1a.firebasestorage.app",
+  messagingSenderId: "5299604231",
+  appId: "1:5299604231:web:857b6efb82f6079f2293a2",
+  measurementId: "G-62SCFBLKQ7"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
-export const storage = getStorage(app);
+const analytics = getAnalytics(app);
