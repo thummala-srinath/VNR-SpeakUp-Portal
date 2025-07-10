@@ -8,7 +8,6 @@ import {
 
 // Ensure everything waits for DOM to load
 window.addEventListener('DOMContentLoaded', () => {
-  // Suggestion Form Submission
   const form = document.getElementById("suggestionForm");
   const statusBox = document.getElementById("submissionStatus");
 
@@ -21,8 +20,15 @@ window.addEventListener('DOMContentLoaded', () => {
     const category = form.querySelector("select").value;
     const file = document.getElementById("fileInput").files[0];
 
+    // ✅ Basic field validation
     if (!text || !category) {
       statusBox.textContent = "❌ Fill all fields";
+      statusBox.className = "text-red-600";
+      return;
+    }
+
+    if (file && file.size > 10 * 1024 * 1024) {
+      statusBox.textContent = "❌ File too large (max 10MB)";
       statusBox.className = "text-red-600";
       return;
     }
@@ -30,24 +36,33 @@ window.addEventListener('DOMContentLoaded', () => {
     let fileURL = null;
 
     try {
+      // ✅ File upload block
       if (file) {
         const fileRef = ref(storage, `evidence/${Date.now()}_${file.name}`);
+        console.log("📦 Uploading file:", file.name);
         await uploadBytes(fileRef, file);
         fileURL = await getDownloadURL(fileRef);
+        console.log("✅ File uploaded. URL:", fileURL);
       }
 
-      await addDoc(collection(db, "suggestions"), {
+      // ✅ Debug log before submission
+      const submissionData = {
         text,
         category,
         status: "Pending",
-        fileURL,
+        fileURL: fileURL || null,
         timestamp: serverTimestamp()
-      });
+      };
+
+      console.log("🚀 Submitting to Firestore:", submissionData);
+
+      await addDoc(collection(db, "suggestions"), submissionData);
 
       statusBox.textContent = "✅ Suggestion submitted!";
       statusBox.className = "text-green-600";
       form.reset();
     } catch (err) {
+      console.error("❌ Firestore submission failed:", err);
       statusBox.textContent = "🚨 Submission failed. Try again.";
       statusBox.className = "text-red-600";
     }
@@ -55,7 +70,7 @@ window.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => (statusBox.textContent = ""), 5000);
   });
 
-  // Admin Login
+  // ✅ Admin Login block
   const adminForm = document.getElementById("adminForm");
 
   adminForm?.addEventListener("submit", (e) => {
