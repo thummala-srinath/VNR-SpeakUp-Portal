@@ -27,7 +27,13 @@
     <h2 class="text-3xl font-semibold">Speak. Share. Solve.</h2>
     <p class="text-gray-600">Submit anonymous suggestions to improve campus life.</p>
   </section>
-
+  
+  <div class="text-center my-6">
+  <button onclick="toggleSuggestions()" class="bg-gray-200 text-blue-800 font-medium px-4 py-2 rounded hover:bg-gray-300">
+    🔄 View Recent Suggestions
+  </button>
+</div>
+  
   <!-- Suggestion Form -->
   <section id="submit" class="max-w-xl mx-auto p-6 bg-white shadow rounded my-8">
     <form id="suggestionForm">
@@ -47,15 +53,14 @@
     <div id="submissionStatus" class="mt-4 text-sm text-gray-600"></div>
   </section>
 
-  <!-- 🟡 View Status Section -->
-<section id="viewStatus" class="max-w-2xl mx-auto bg-white shadow rounded p-6 mb-12">
-  <h2 class="text-xl font-semibold mb-4">📋 Suggestion Status</h2>
-  <div id="statusList" class="space-y-3 text-gray-700">
-    <!-- Status updates will be injected here -->
-    <p class="text-sm italic">Loading status updates...</p>
+<!-- 🔥 Recent Suggestions with Status -->
+<section id="recentSuggestions" class="hidden max-w-2xl mx-auto bg-white shadow rounded p-6 my-12">
+  <h2 class="text-xl font-semibold mb-4">📢 Recent Suggestions</h2>
+  <div id="suggestionList" class="space-y-3">
+    <!-- Suggestions will appear here -->
   </div>
 </section>
-  
+
   <!-- Admin Login -->
   <section id="adminLogin" class="max-w-md mx-auto p-6 bg-white shadow rounded my-12">
     <form id="adminForm">
@@ -72,5 +77,12 @@
   </footer>
 
   <script type="module" src="main.js"></script>
+  <script>
+  function toggleSuggestions() {
+    const section = document.getElementById('recentSuggestions');
+    section.classList.toggle('hidden');
+    section.scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
 </body>
 </html>
