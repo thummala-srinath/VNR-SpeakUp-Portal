@@ -9,14 +9,18 @@
 </head>
 <body class="bg-gray-50 font-sans">
 
-  <!-- Header -->
-  <header class="bg-white shadow p-4 flex justify-between items-center">
-    <div class="flex items-center gap-3">
-      <img src="logo.jpg" alt="VNR Logo" class="h-10" />
-      <h1 class="text-xl font-bold">VNR SpeakUp Portal</h1>
-    </div>
+ <!-- Header -->
+<header class="bg-white shadow p-4 flex justify-between items-center">
+  <div class="flex items-center gap-3">
+    <img src="logo.jpg" alt="VNR Logo" class="h-10" />
+    <h1 class="text-xl font-bold">VNR SpeakUp Portal</h1>
+  </div>
+  <div class="flex gap-6">
+    <a href="#viewStatus" class="text-blue-600 hover:underline">View Status</a>
     <a href="#adminLogin" class="text-blue-600 hover:underline">Admin Login</a>
-  </header>
+  </div>
+</header>
+
 
   <!-- Hero -->
   <section class="text-center p-8 bg-blue-50">
@@ -43,14 +47,15 @@
     <div id="submissionStatus" class="mt-4 text-sm text-gray-600"></div>
   </section>
 
-  <!-- 🔥 Recent Suggestions with Status -->
-  <section id="recentSuggestions" class="max-w-2xl mx-auto bg-white shadow rounded p-6 mb-12">
-    <h2 class="text-xl font-semibold mb-4">📢 Recent Suggestions</h2>
-    <div id="suggestionList" class="space-y-3">
-      <!-- Suggestions will appear here -->
-    </div>
-  </section>
-
+  <!-- 🟡 View Status Section -->
+<section id="viewStatus" class="max-w-2xl mx-auto bg-white shadow rounded p-6 mb-12">
+  <h2 class="text-xl font-semibold mb-4">📋 Suggestion Status</h2>
+  <div id="statusList" class="space-y-3 text-gray-700">
+    <!-- Status updates will be injected here -->
+    <p class="text-sm italic">Loading status updates...</p>
+  </div>
+</section>
+  
   <!-- Admin Login -->
   <section id="adminLogin" class="max-w-md mx-auto p-6 bg-white shadow rounded my-12">
     <form id="adminForm">
