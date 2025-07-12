@@ -9,12 +9,16 @@
 </head>
 <body class="bg-gray-100 font-sans min-h-screen flex items-center justify-center px-4">
 
-  <div class="w-full max-w-sm bg-white rounded-lg shadow-lg p-6">
+  <!-- Admin Login Card -->
+  <div class="w-full max-w-sm sm:max-w-md bg-white border border-blue-900 rounded-lg shadow-md p-6">
     <div class="text-center mb-6">
-      <h1 class="text-2xl font-bold text-gray-800">Admin Login</h1>
-      <p class="text-sm text-gray-500">Authorized access only</p>
+      <!-- VNR Logo -->
+      <img src="logo.jpg" alt="VNR Logo" class="mx-auto h-16 mb-3" />
+      <h1 class="text-xl font-bold text-blue-900">Admin Login</h1>
+      <p class="text-sm text-gray-600">Authorized access only</p>
     </div>
 
+    <!-- Login Form -->
     <form id="adminForm" class="space-y-4">
       <div>
         <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
@@ -28,12 +32,13 @@
       </div>
 
       <button type="submit"
-              class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded transition-all duration-200">
+              class="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded transition-all duration-200">
         Login
       </button>
     </form>
   </div>
 
+  <!-- JS Logic -->
   <script type="module" src="main.js"></script>
 </body>
 </html>
