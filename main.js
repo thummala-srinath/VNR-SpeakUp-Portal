@@ -101,11 +101,10 @@ async function loadSuggestions() {
     el.className = "p-3 border rounded shadow-sm bg-gray-50";
 
     el.innerHTML = `
-      <div class="flex justify-between items-center">
-        <p class="text-gray-800">${data.text}</p>
-        <span class="text-xs font-medium px-2 py-1 rounded ${getStatusColor(data.status)}">${data.status}</span>
-      </div>
-    `;
+  <div class="border-b pb-2 mb-2">
+    <p class="text-gray-800">${data.text}</p>
+  </div>`
+   `;
     list.appendChild(el);
   });
 }
