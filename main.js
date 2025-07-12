@@ -100,10 +100,11 @@ async function loadSuggestions() {
     const el = document.createElement("div");
     el.className = "p-3 border rounded shadow-sm bg-gray-50";
 
-    el.className = "p-3 border rounded shadow-sm bg-gray-50";
-el.innerHTML = `
-  <p class="text-gray-800">${data.text}</p>
-`;
+    el.innerHTML = `
+  <div class="border-b pb-2 mb-2">
+    <p class="text-gray-800">${data.text}</p>
+  </div>
+  `;
     list.appendChild(el);
   });
 }
