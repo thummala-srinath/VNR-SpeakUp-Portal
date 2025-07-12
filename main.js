@@ -101,10 +101,8 @@ async function loadSuggestions() {
     el.className = "p-3 border rounded shadow-sm bg-gray-50";
 
     el.innerHTML = `
-  <div class="border-b pb-2 mb-2">
-    <p class="text-gray-800">${data.text}</p>
-  </div>`
-   `;
+  <p class="text-gray-800">${data.text}</p>`
+  `;
     list.appendChild(el);
   });
 }
