@@ -3,20 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <title>Admin Login – VNR SpeakUp</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 font-sans">
-  <div class="min-h-screen flex items-center justify-center">
-    <div class="bg-white p-6 rounded shadow max-w-sm w-full">
-      <h2 class="text-xl font-semibold mb-4 text-center">Admin Login</h2>
-      <form id="adminForm">
-        <input type="email" placeholder="Email" required class="w-full border rounded p-2 mb-3" />
-        <input type="password" placeholder="Password" required class="w-full border rounded p-2 mb-4" />
-        <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Login</button>
-      </form>
+<body class="bg-gray-100 font-sans min-h-screen flex items-center justify-center px-4">
+
+  <div class="w-full max-w-sm bg-white rounded-lg shadow-lg p-6">
+    <div class="text-center mb-6">
+      <h1 class="text-2xl font-bold text-gray-800">Admin Login</h1>
+      <p class="text-sm text-gray-500">Authorized access only</p>
     </div>
+
+    <form id="adminForm" class="space-y-4">
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+        <input type="email" id="email" placeholder="admin@vnrvjiet.ac.in" required
+               class="w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+        <input type="password" id="password" placeholder="••••••••" required
+               class="w-full border border-gray-300 rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+      <button type="submit"
+              class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded transition-all duration-200">
+        Login
+      </button>
+    </form>
   </div>
+
   <script type="module" src="main.js"></script>
 </body>
 </html>
