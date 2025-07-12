@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta charset="UTF-8" />
   <title>VNR SpeakUp Portal</title>
   <link rel="icon" href="logo.jpg" />
@@ -10,10 +11,10 @@
 <body class="bg-gray-50 font-sans">
 
  <!-- Header -->
-<header class="bg-white shadow p-4 flex justify-between items-center">
+<header class="bg-white shadow p-4 flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
   <div class="flex items-center gap-3">
     <img src="logo.jpg" alt="VNR Logo" class="h-10" />
-    <h1 class="text-xl font-bold">VNR SpeakUp Portal</h1>
+   <h1 class="text-xl sm:text-2xl md:text-3xl font-bold">VNR SpeakUp Portal</h1>
   </div>
   <div class="flex gap-6">
     <a href="login.html" class="text-blue-600 hover:underline">Admin Login</a>
@@ -34,7 +35,7 @@
 </div>
   
   <!-- Suggestion Form -->
-  <section id="submit" class="max-w-xl mx-auto p-6 bg-white shadow rounded my-8">
+  <section id="submit" class="w-full max-w-xl mx-auto p-4 sm:p-6 bg-white shadow rounded my-8">
     <form id="suggestionForm">
       <textarea placeholder="Your suggestion..." required class="w-full border rounded p-2 mb-3"></textarea>
       <select required class="w-full border rounded p-2 mb-3">
@@ -53,7 +54,7 @@
   </section>
 
 <!-- 🔥 Recent Suggestions with Status -->
-<section id="recentSuggestions" class="hidden max-w-2xl mx-auto bg-white shadow rounded p-6 my-12">
+<section id="recentSuggestions" class="max-w-2xl mx-auto bg-white shadow rounded p-4 sm:p-6 my-12">
   <h2 class="text-xl font-semibold mb-4">📢 Recent Suggestions</h2>
   <div id="suggestionList" class="space-y-3">
     <!-- Suggestions will appear here -->
