@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Suggestion Status – VNR SpeakUp</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <header class="bg-white p-4 shadow flex justify-between items-center">
+    <h1 class="text-xl font-bold">Suggestion Status</h1>
+    <a href="index.html" class="text-blue-600 hover:underline">🏠 Back to Home</a>
+  </header>
+
+  <main class="p-6 max-w-2xl mx-auto">
+    <h2 class="text-lg font-semibold mb-4">📄 All Suggestions</h2>
+    <div id="statusList" class="space-y-4"></div>
+  </main>
+
+  <script type="module">
+    import { db } from './firebase-config.js';
+    import {
+      collection, getDocs, query, orderBy
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    function getStatusColor(status) {
+      switch (status) {
+        case "Resolved": return "bg-green-100 text-green-700";
+        case "In Progress": return "bg-yellow-100 text-yellow-700";
+        default: return "bg-red-100 text-red-700";
+      }
+    }
+
+    async function loadStatuses() {
+      const list = document.getElementById("statusList");
+      const q = query(collection(db, "suggestions"), orderBy("timestamp", "desc"));
+      const snapshot = await getDocs(q);
+      list.innerHTML = "";
+
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const div = document.createElement("div");
+        div.className = "p-4 bg-white shadow rounded";
+        div.innerHTML = `
+          <div class="flex justify-between items-center">
+            <p class="text-gray-800">${data.text}</p>
+            <span class="text-xs font-medium px-2 py-1 rounded ${getStatusColor(data.status)}">${data.status}</span>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    loadStatuses();
+  </script>
+</body>
+</html>
