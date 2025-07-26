@@ -34,20 +34,33 @@
 
   <section id="submit" class="max-w-xl mx-auto p-6 bg-white shadow rounded my-8">
     <form id="suggestionForm">
-      <textarea placeholder="Your suggestion..." required class="w-full border rounded p-2 mb-3"></textarea>
-      <select required class="w-full border rounded p-2 mb-3">
-        <option value="">Select Category</option>
-        <option>Academics</option>
-        <option>Infrastructure</option>
-        <option>Facilities</option>
-        <option>Other</option>
-      </select>
-      <input type="file" id="fileInput" accept="image/*,.pdf" class="w-full border rounded p-2 mb-3" />
-      <button type="submit" class="bg-blue-700 text-white px-4 py-2 rounded w-full hover:bg-blue-800">
-        Submit Anonymously
-      </button>
-    </form>
-    <div id="submissionStatus" class="mt-4 text-sm text-gray-600"></div>
+  <textarea placeholder="Your suggestion..." required class="w-full border rounded p-2 mb-3"></textarea>
+
+  <!-- ✅ New Section Selector -->
+  <select id="type" required class="w-full border rounded p-2 mb-3">
+    <option value="">Select Section</option>
+    <option value="Suggestion">Suggestion</option>
+    <option value="Report">Report</option>
+  </select>
+
+  <!-- 📌 Existing Category Selector -->
+  <select required class="w-full border rounded p-2 mb-3">
+    <option value="">Select Category</option>
+    <option>Academics</option>
+    <option>Infrastructure</option>
+    <option>Facilities</option>
+    <option>Other</option>
+  </select>
+
+  <input type="file" id="fileInput" accept="image/*,.pdf" class="w-full border rounded p-2 mb-3" />
+
+  <button type="submit" class="bg-blue-700 text-white px-4 py-2 rounded w-full hover:bg-blue-800">
+    Submit Anonymously
+  </button>
+</form>
+
+<div id="submissionStatus" class="mt-4 text-sm text-gray-600"></div>
+
   </section>
 
   <section id="recentSuggestions" class="hidden max-w-2xl mx-auto bg-white shadow rounded p-6 my-12">
