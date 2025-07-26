@@ -15,10 +15,11 @@ window.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     statusBox.textContent = "⏳ Uploading...";
     statusBox.className = "text-yellow-600";
-
     const text = form.querySelector("textarea").value.trim();
+    const type = form.querySelector("#type").value;
     const category = form.querySelector("select").value;
     const file = document.getElementById("fileInput").files[0];
+
 
     if (!text || !category) {
       statusBox.textContent = "❌ Fill all fields";
