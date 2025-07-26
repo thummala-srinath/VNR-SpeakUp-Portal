@@ -17,6 +17,8 @@ function previewAttachment(url) {
     return `<img src="${url}" alt="Evidence" class="mt-2 max-h-40 rounded shadow" />`;
   } else if (url.endsWith(".pdf")) {
     return `<a href="${url}" target="_blank" class="text-blue-600 underline text-sm mb-2 inline-block">📄 View PDF Evidence</a>`;
+  } else if (url.match(/\.(mp4|webm|ogg)$/)) {
+    return `<video controls class="mt-2 max-h-48 rounded shadow"><source src="${url}" type="video/mp4">Your browser does not support video.</video>`;
   } else {
     return `<a href="${url}" target="_blank" class="text-blue-600 underline text-sm mb-2 inline-block">📎 View Attachment</a>`;
   }
@@ -25,93 +27,36 @@ function previewAttachment(url) {
 // Render a suggestion card
 function renderCard(id, data) {
   const card = document.createElement("div");
-  const colorClass = {
-    "Pending": "bg-yellow-50",
-    "Initiated": "bg-purple-50",
-    "In Progress": "bg-blue-50",
-    "Success": "bg-teal-50",
-    "Resolved": "bg-green-50"
-  }[data.status] || "bg-yellow-50";
-
-  const badgeClass = {
-    "Pending": "bg-yellow-100 text-yellow-700",
-    "Initiated": "bg-purple-100 text-purple-700",
-    "In Progress": "bg-blue-100 text-blue-700",
-    "Success": "bg-teal-100 text-teal-700",
-    "Resolved": "bg-green-100 text-green-700"
-  }[data.status] || "bg-yellow-100 text-yellow-700";
-
-  card.className = `p-4 rounded shadow ${colorClass}`;
+  card.className = `p-4 rounded shadow bg-white border`;
 
   card.innerHTML = `
-    <p class="mb-2">${data.text}</p>
+    <p class="mb-2 text-gray-800">${data.text}</p>
+    <div class="text-sm text-gray-600 mb-1">Type: ${data.type || 'Suggestion'}</div>
     <div class="text-sm text-gray-600 mb-1">Category: ${data.category}</div>
-    <div class="text-sm font-medium mb-2">Status: 
-      <span class="px-2 py-1 rounded ${badgeClass}">${data.status}</span>
-    </div>
+    <label class="text-sm font-medium mt-2 block">Status:</label>
+    <input type="text" value="${data.status || ''}" id="status-${id}" class="border p-1 w-full rounded mb-2" />
+    <label class="text-sm font-medium">Admin Comment:</label>
+    <textarea id="comment-${id}" class="border p-1 w-full rounded mb-2" placeholder="Enter your comment...">${data.comment || ''}</textarea>
+    <button onclick="updateStatus('${id}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">💾 Save</button>
     ${data.fileURL ? previewAttachment(data.fileURL) : ""}
-    <div class="flex flex-wrap gap-2 mt-2">
-      ${["Pending", "Initiated", "In Progress", "Success", "Resolved"].map(status =>
-        `<button onclick="updateStatus('${id}', '${status}')" class="${getStatusButtonClass(status)}">${getStatusLabel(status)}</button>`
-      ).join("")}
-    </div>
   `;
 
   container.appendChild(card);
 }
 
-// Status button styling
-function getStatusButtonClass(status) {
-  const colorMap = {
-    "Pending": "bg-yellow-500 hover:bg-yellow-600",
-    "Initiated": "bg-purple-500 hover:bg-purple-600",
-    "In Progress": "bg-blue-500 hover:bg-blue-600",
-    "Success": "bg-teal-500 hover:bg-teal-600",
-    "Resolved": "bg-green-500 hover:bg-green-600"
-  };
-  return `${colorMap[status]} text-white px-3 py-1 rounded text-sm`;
-}
-
-// Status button icon+label
-function getStatusLabel(status) {
-  const iconMap = {
-    "Pending": "⏳ Pending",
-    "Initiated": "🚀 Initiated",
-    "In Progress": "🔄 In Progress",
-    "Success": "🎯 Success",
-    "Resolved": "✅ Resolved"
-  };
-  return iconMap[status];
-}
-
-// Load suggestions and count statuses
+// Load suggestions and count
 async function loadSuggestions(keyword = "") {
   try {
     const snapshot = await getDocs(query(collection(db, "suggestions"), orderBy("timestamp", "desc")));
     container.innerHTML = "";
     console.log("🔎 Loaded", snapshot.size, "suggestions");
 
-    const counts = {
-      Pending: 0,
-      Initiated: 0,
-      "In Progress": 0,
-      Success: 0,
-      Resolved: 0
-    };
-
     snapshot.forEach(docSnap => {
       const data = docSnap.data();
       const id = docSnap.id;
 
       if (keyword && !data.text?.toLowerCase().includes(keyword.toLowerCase())) return;
-
-      counts[data.status] = (counts[data.status] || 0) + 1;
       renderCard(id, data);
-    });
-
-    Object.entries(counts).forEach(([status, count]) => {
-      const el = document.getElementById(`count${status.replace(/\s/g, "")}`);
-      if (el) el.textContent = count;
     });
   } catch (err) {
     console.error("❌ Error loading suggestions:", err);
@@ -119,39 +64,44 @@ async function loadSuggestions(keyword = "") {
   }
 }
 
-// Update status handler
-window.updateStatus = async (id, status) => {
+// Update status and comment
+window.updateStatus = async (id) => {
   try {
+    const status = document.getElementById(`status-${id}`).value;
+    const comment = document.getElementById(`comment-${id}`).value;
     const ref = doc(db, "suggestions", id);
-    await updateDoc(ref, { status });
-    alert(`✅ Status updated to "${status}"`);
+    await updateDoc(ref, { status, comment });
+    alert(`✅ Updated successfully`);
     loadSuggestions(searchInput.value);
   } catch (err) {
-    console.error("❌ Failed to update status:", err);
-    alert("🚨 Could not update status");
+    console.error("❌ Failed to update:", err);
+    alert("🚨 Could not update");
   }
 };
 
 // Export to CSV
-document.getElementById("exportCSV").addEventListener("click", async () => {
-  const snapshot = await getDocs(collection(db, "suggestions"));
-  let csv = "Text,Category,Status\n";
-  snapshot.forEach(doc => {
-    const d = doc.data();
-    csv += `"${d.text.replace(/"/g, '""')}","${d.category}","${d.status}"\n`;
+const exportBtn = document.getElementById("exportCSV");
+if (exportBtn) {
+  exportBtn.addEventListener("click", async () => {
+    const snapshot = await getDocs(collection(db, "suggestions"));
+    let csv = "Text,Type,Category,Status,Comment\n";
+    snapshot.forEach(doc => {
+      const d = doc.data();
+      csv += `"${d.text.replace(/"/g, '""')}","${d.type || ''}","${d.category}","${d.status || ''}","${d.comment || ''}"\n`;
+    });
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "suggestions.csv";
+    link.click();
   });
+}
 
-  const blob = new Blob([csv], { type: "text/csv" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "suggestions.csv";
-  link.click();
-});
-
-// Search as you type
+// Search
 searchInput.addEventListener("input", (e) => {
   loadSuggestions(e.target.value);
 });
 
-// First load
+// Initial
 loadSuggestions();
