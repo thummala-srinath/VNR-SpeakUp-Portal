@@ -34,8 +34,8 @@ function renderCard(id, data) {
 
   card.innerHTML = `
     <p class="mb-2">${data.text}</p>
-    <p class="text-sm text-gray-700 mb-1">Type: <strong>${data.type || "N/A"}</strong></p>
-    <div class="text-sm text-gray-600 mb-1">Category: ${data.category}</div>
+    <div class="text-sm text-gray-600 mb-1">Type: ${data.type || "N/A"}</div>
+    <div class="text-sm text-gray-600 mb-1">Category: ${data.category || "N/A"}</div>
     <div class="text-sm font-medium mb-2">Status: 
       <span class="px-2 py-1 rounded ${badgeClass}">${data.status}</span>
     </div>
@@ -126,7 +126,7 @@ document.getElementById("exportCSV").addEventListener("click", async () => {
   let csv = "Text,Type,Category,Status\n";
   snapshot.forEach(doc => {
     const d = doc.data();
-    csv += `"${d.text.replace(/"/g, '""')}","${d.type || "N/A"}","${d.category}","${d.status}"\n`;
+    csv += `"${d.text.replace(/"/g, '""')}","${d.type}","${d.category}","${d.status}"\n`;
   });
 
   const blob = new Blob([csv], { type: "text/csv" });
@@ -143,4 +143,3 @@ searchInput.addEventListener("input", (e) => {
 
 // Initial load
 loadSuggestions();
-
