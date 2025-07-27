@@ -7,7 +7,6 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
 window.addEventListener('DOMContentLoaded', () => {
-  // Suggestion Submission
   const form = document.getElementById("suggestionForm");
   const statusBox = document.getElementById("submissionStatus");
 
@@ -15,14 +14,14 @@ window.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     statusBox.textContent = "⏳ Uploading...";
     statusBox.className = "text-yellow-600";
+
     const text = form.querySelector("textarea").value.trim();
-    const type = form.querySelector("#type").value;
-    const category = form.querySelector("select").value;
+    const type = form.querySelector("#type").value;          // ✅ Added type
+    const category = form.querySelector("#category").value;  // ✅ Make sure your category <select> has id="category"
     const file = document.getElementById("fileInput").files[0];
 
-
-    if (!text || !category) {
-      statusBox.textContent = "❌ Fill all fields";
+    if (!text || !type || !category) {
+      statusBox.textContent = "❌ Please fill all fields.";
       statusBox.className = "text-red-600";
       return;
     }
@@ -38,16 +37,17 @@ window.addEventListener('DOMContentLoaded', () => {
 
       await addDoc(collection(db, "suggestions"), {
         text,
+        type,                  // ✅ Save type (Suggestion or Report)
         category,
         status: "Pending",
         fileURL,
         timestamp: serverTimestamp()
       });
 
-      statusBox.textContent = "✅ Suggestion submitted!";
+      statusBox.textContent = "✅ Submission successful!";
       statusBox.className = "text-green-600";
       form.reset();
-      loadSuggestions(); // Refresh suggestions after submission
+      loadSuggestions();
     } catch (err) {
       statusBox.textContent = "🚨 Submission failed. Try again.";
       statusBox.className = "text-red-600";
@@ -57,36 +57,10 @@ window.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => (statusBox.textContent = ""), 5000);
   });
 
-  // Admin Login
-  const adminForm = document.getElementById("adminForm");
-
-  adminForm?.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const email = adminForm.querySelector('input[type="email"]').value;
-    const password = adminForm.querySelector('input[type="password"]').value;
-
-    if (email === "admin@vnrvjiet.ac.in" && password === "#VNRVJIET@2k25") {
-      window.location.href = "admin.html";
-    } else {
-      alert("❌ Invalid credentials");
-    }
-  });
-
-  // Load Suggestions to Home
+  // Load suggestions preview (on home page)
   loadSuggestions();
 });
 
-// Utility to get badge style
-function getStatusColor(status) {
-  switch (status) {
-    case "Resolved": return "bg-green-100 text-green-700";
-    case "In Progress": return "bg-yellow-100 text-yellow-700";
-    case "Pending":
-    default: return "bg-red-100 text-red-700";
-  }
-}
-
-// Fetch and render recent suggestions
 async function loadSuggestions() {
   const list = document.getElementById("suggestionList");
   if (!list) return;
@@ -102,10 +76,12 @@ async function loadSuggestions() {
     el.className = "p-3 border rounded shadow-sm bg-gray-50";
 
     el.innerHTML = `
-  <div class="border-b pb-2 mb-2">
-    <p class="text-gray-800">${data.text}</p>
-  </div>
-  `;
+      <div class="border-b pb-2 mb-2">
+        <p class="text-gray-800 mb-1"><strong>${data.type || 'N/A'} | ${data.category || ''}</strong></p>
+        <p>${data.text}</p>
+        ${data.fileURL ? `<a href="${data.fileURL}" target="_blank" class="text-blue-600 underline">📎 View Attachment</a>` : ""}
+      </div>
+    `;
     list.appendChild(el);
   });
 }
