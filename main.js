@@ -7,22 +7,22 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
 window.addEventListener('DOMContentLoaded', () => {
+  // Suggestion/Report Submission
   const form = document.getElementById("suggestionForm");
   const statusBox = document.getElementById("submissionStatus");
 
-  // ✅ Suggestion Submission
   form?.addEventListener("submit", async (e) => {
     e.preventDefault();
     statusBox.textContent = "⏳ Uploading...";
     statusBox.className = "text-yellow-600";
 
     const text = form.querySelector("textarea").value.trim();
-    const type = form.querySelector("#type").value;
-    const category = form.querySelector("#category").value;
+    const type = form.querySelector("#type").value;           // ✅ Get type value
+    const category = form.querySelector("#category").value;   // ✅ Get category value
     const file = document.getElementById("fileInput").files[0];
 
     if (!text || !type || !category) {
-      statusBox.textContent = "❌ Please fill all fields.";
+      statusBox.textContent = "❌ Fill all fields";
       statusBox.className = "text-red-600";
       return;
     }
@@ -38,10 +38,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
       await addDoc(collection(db, "suggestions"), {
         text,
-        type,
+        type,                    // ✅ Save the selected section: Suggestion / Report
         category,
-        status: "Pending",
         fileURL,
+        status: "Pending",
         timestamp: serverTimestamp()
       });
 
@@ -58,7 +58,7 @@ window.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => (statusBox.textContent = ""), 5000);
   });
 
-  // ✅ Admin Login Handler
+  // Admin Login
   const adminForm = document.getElementById("adminForm");
 
   adminForm?.addEventListener("submit", (e) => {
@@ -66,20 +66,29 @@ window.addEventListener('DOMContentLoaded', () => {
     const email = adminForm.querySelector('input[type="email"]').value;
     const password = adminForm.querySelector('input[type="password"]').value;
 
-    // You can replace this with Firebase Auth later
     if (email === "admin@vnrvjiet.ac.in" && password === "#VNRVJIET@2k25") {
       localStorage.setItem("isAdmin", "true");
-      window.location.href = "adminDashboard.html";
+      window.location.href = "admin.html";
     } else {
       alert("❌ Invalid credentials");
     }
   });
 
-  // ✅ Load Recent Suggestions (on homepage)
+  // Load recent suggestions
   loadSuggestions();
 });
 
-// ✅ Function to load last 5 suggestions
+// Get color for status (unused in preview, but available for use)
+function getStatusColor(status) {
+  switch (status) {
+    case "Resolved": return "bg-green-100 text-green-700";
+    case "In Progress": return "bg-yellow-100 text-yellow-700";
+    case "Pending":
+    default: return "bg-red-100 text-red-700";
+  }
+}
+
+// Load last 5 suggestions for preview
 async function loadSuggestions() {
   const list = document.getElementById("suggestionList");
   if (!list) return;
