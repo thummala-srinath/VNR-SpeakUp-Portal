@@ -10,14 +10,15 @@ window.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById("suggestionForm");
   const statusBox = document.getElementById("submissionStatus");
 
+  // ✅ Suggestion Submission
   form?.addEventListener("submit", async (e) => {
     e.preventDefault();
     statusBox.textContent = "⏳ Uploading...";
     statusBox.className = "text-yellow-600";
 
     const text = form.querySelector("textarea").value.trim();
-    const type = form.querySelector("#type").value;          // ✅ Added type
-    const category = form.querySelector("#category").value;  // ✅ Make sure your category <select> has id="category"
+    const type = form.querySelector("#type").value;
+    const category = form.querySelector("#category").value;
     const file = document.getElementById("fileInput").files[0];
 
     if (!text || !type || !category) {
@@ -37,7 +38,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
       await addDoc(collection(db, "suggestions"), {
         text,
-        type,                  // ✅ Save type (Suggestion or Report)
+        type,
         category,
         status: "Pending",
         fileURL,
@@ -57,10 +58,28 @@ window.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => (statusBox.textContent = ""), 5000);
   });
 
-  // Load suggestions preview (on home page)
+  // ✅ Admin Login Handler
+  const adminForm = document.getElementById("adminForm");
+
+  adminForm?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = adminForm.querySelector('input[type="email"]').value;
+    const password = adminForm.querySelector('input[type="password"]').value;
+
+    // You can replace this with Firebase Auth later
+    if (email === "admin@vnrvjiet.ac.in" && password === "#VNRVJIET@2k25") {
+      localStorage.setItem("isAdmin", "true");
+      window.location.href = "adminDashboard.html";
+    } else {
+      alert("❌ Invalid credentials");
+    }
+  });
+
+  // ✅ Load Recent Suggestions (on homepage)
   loadSuggestions();
 });
 
+// ✅ Function to load last 5 suggestions
 async function loadSuggestions() {
   const list = document.getElementById("suggestionList");
   if (!list) return;
