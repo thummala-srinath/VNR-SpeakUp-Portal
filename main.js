@@ -27,21 +27,14 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-  let fileURL = null;
+    let fileURL = null;
 
-try {
-  if (file) {
-    console.log("📁 File selected:", file); // Debugging line (optional)
-    
-    const fileRef = ref(storage, `evidence/${Date.now()}_${file.name}`);
-    await uploadBytes(fileRef, file); // ⬆️ Upload to Firebase Storage
-    fileURL = await getDownloadURL(fileRef); // 🔗 Get download URL
-
-    console.log("✅ File uploaded. URL:", fileURL); // Confirm upload
-  }
-} catch (error) {
-  console.error("❌ File upload failed:", error);
-}
+    try {
+      if (file) {
+        const fileRef = ref(storage, `evidence/${Date.now()}_${file.name}`);
+        await uploadBytes(fileRef, file);
+        fileURL = await getDownloadURL(fileRef);
+      }
 
       await addDoc(collection(db, "suggestions"), {
         text,
